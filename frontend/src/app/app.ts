@@ -1,13 +1,13 @@
-import { provideHttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { Component } from '@angular/core';
+import { Weather } from './weather/weather';
 
-@NgModule({
-  declarations: [],
-  imports: [
-    
-  ],
-  providers: [
-    provideHttpClient()
-  ]
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [Weather],
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss']
 })
-export class AppModule { }
+export class App {
+  title = 'frontend';
+}

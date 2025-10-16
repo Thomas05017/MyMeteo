@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+// Importa il tema Material
+@use '@angular/material' as mat;
+
+// Includi i temi di base Material
+@include mat.core();
+
+// Stili globali
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+// Personalizzazioni aggiuntive per Material
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-card {
+  border-radius: 12px !important;
+}
