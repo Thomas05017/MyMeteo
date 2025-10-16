@@ -26,7 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./weather.scss']
 })
 export class Weather {
-  city = 'Milano';
+  city = 'Cascina';
   weatherData: any;
   loading = false;
 
