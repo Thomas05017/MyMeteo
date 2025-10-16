@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill">
+    <mat-label>Città</mat-label>
+    <input matInput [(ngModel)]="city">
+  </mat-form-field>
+  
+  <button mat-raised-button color="primary" (click)="getWeather()">Cerca Meteo</button>
+  
+  <div *ngIf="weatherData">
+    <h2>{{ weatherData.name }}</h2>
+    <p>Temperatura: {{ weatherData.main.temp }}°C</p>
+    <p>Condizione: {{ weatherData.weather[0].description }}</p>
+  </div>
+  
