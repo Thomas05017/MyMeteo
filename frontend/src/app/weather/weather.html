@@ -1,115 +1,128 @@
-<div class="weather-container">
-    <mat-card class="weather-card">
-      <mat-card-header>
-        <mat-card-title>
-          <mat-icon>wb_sunny</mat-icon>
-          Meteo App
-        </mat-card-title>
-      </mat-card-header>
-  
-      <mat-card-content>
-        <div class="search-box">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Città</mat-label>
-            <input 
-              matInput 
-              [(ngModel)]="city" 
-              placeholder="Inserisci il nome della città"
-              (keyup.enter)="getWeather()"
-            >
-            <mat-icon matSuffix>location_city</mat-icon>
-          </mat-form-field>
-  
-          <button 
-            mat-raised-button 
-            color="primary" 
-            (click)="getWeather()"
-            [disabled]="loading"
-            class="search-button"
-          >
-            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-            <mat-icon *ngIf="!loading">search</mat-icon>
-            {{ loading ? 'Caricamento...' : 'Cerca Meteo' }}
-          </button>
-        </div>
-  
-        <div *ngIf="weatherData" class="weather-info">
-          <mat-card class="info-card">
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>place</mat-icon>
-                {{ weatherData.name }}, {{ weatherData.sys.country }}
-              </mat-card-title>
-            </mat-card-header>
-            
-            <mat-card-content>
-              <div class="weather-details">
-                <div class="detail-item">
-                  <mat-icon>thermostat</mat-icon>
-                  <div class="detail-content">
-                    <span class="detail-label">Temperatura</span>
-                    <span class="detail-value">{{ weatherData.main.temp }}°C</span>
-                  </div>
-                </div>
-  
-                <div class="detail-item">
-                  <mat-icon>cloud</mat-icon>
-                  <div class="detail-content">
-                    <span class="detail-label">Condizione</span>
-                    <span class="detail-value">{{ weatherData.weather[0].description }}</span>
-                  </div>
-                </div>
-  
-                <div class="detail-item">
-                  <mat-icon>water_drop</mat-icon>
-                  <div class="detail-content">
-                    <span class="detail-label">Umidità</span>
-                    <span class="detail-value">{{ weatherData.main.humidity }}%</span>
-                  </div>
-                </div>
-  
-                <div class="detail-item">
-                  <mat-icon>air</mat-icon>
-                  <div class="detail-content">
-                    <span class="detail-label">Vento</span>
-                    <span class="detail-value">{{ weatherData.wind.speed }} m/s</span>
-                  </div>
-                </div>
-  
-                <div class="detail-item">
-                  <mat-icon>compress</mat-icon>
-                  <div class="detail-content">
-                    <span class="detail-label">Pressione</span>
-                    <span class="detail-value">{{ weatherData.main.pressure }} hPa</span>
-                  </div>
-                </div>
-  
-                <div class="detail-item">
-                  <mat-icon>visibility</mat-icon>
-                  <div class="detail-content">
-                    <span class="detail-label">Visibilità</span>
-                    <span class="detail-value">{{ weatherData.visibility / 1000 }} km</span>
-                  </div>
-                </div>
-              </div>
-  
-              <div class="temperature-range">
-                <div class="temp-box">
-                  <mat-icon>arrow_upward</mat-icon>
-                  <span>Max: {{ weatherData.main.temp_max }}°C</span>
-                </div>
-                <div class="temp-box">
-                  <mat-icon>arrow_downward</mat-icon>
-                  <span>Min: {{ weatherData.main.temp_min }}°C</span>
-                </div>
-                <div class="temp-box">
-                  <mat-icon>thermostat</mat-icon>
-                  <span>Percepita: {{ weatherData.main.feels_like }}°C</span>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-card-content>
-    </mat-card>
+<div class="weather-app">
+  <div class="header">
+    <div class="header-content">
+      <mat-icon class="header-icon">cloud</mat-icon>
+      <h1>Weather Forecast</h1>
+    </div>
   </div>
+
+  <div class="container">
+    <mat-card class="search-card">
+      <div class="search-content">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Cerca una città</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="city" 
+            placeholder="Es. Roma, Milano, Firenze..."
+            (keyup.enter)="getWeather()"
+          >
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+        
+        <button 
+          mat-fab 
+          extended 
+          color="primary" 
+          (click)="getWeather()"
+          [disabled]="loading"
+          class="search-btn"
+        >
+          <mat-icon>{{loading ? 'hourglass_empty' : 'navigation'}}</mat-icon>
+          {{ loading ? 'Ricerca...' : 'Cerca' }}
+        </button>
+      </div>
+    </mat-card>
+
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p class="loading-text">Caricamento dati meteo...</p>
+    </div>
+
+    <div *ngIf="weatherData && !loading" class="weather-result">
+      <!-- Card Principale -->
+      <mat-card class="main-weather-card">
+        <div class="location-header">
+          <div class="location-info">
+            <mat-icon class="location-icon">place</mat-icon>
+            <div>
+              <h2>{{ weatherData.name }}</h2>
+              <p class="country">{{ weatherData.sys.country }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="main-temp-section">
+          <div class="temp-display">
+            <mat-icon class="weather-icon-large" [style.color]="getWeatherIconColor()">
+              {{ getWeatherIcon() }}
+            </mat-icon>
+            <div class="temp-value">
+              <span class="temp-number">{{ weatherData.main.temp | number:'1.0-0' }}</span>
+              <span class="temp-unit">°C</span>
+            </div>
+          </div>
+          <div class="weather-description">
+            <p class="condition">{{ weatherData.weather[0].description }}</p>
+            <p class="feels-like">Percepita: {{ weatherData.main.feels_like | number:'1.0-0' }}°C</p>
+          </div>
+        </div>
+
+        <div class="temp-range-bar">
+          <div class="range-item">
+            <mat-icon>arrow_downward</mat-icon>
+            <span>{{ weatherData.main.temp_min | number:'1.0-0' }}°</span>
+          </div>
+          <div class="range-divider"></div>
+          <div class="range-item">
+            <mat-icon>arrow_upward</mat-icon>
+            <span>{{ weatherData.main.temp_max | number:'1.0-0' }}°</span>
+          </div>
+        </div>
+      </mat-card>
+
+      <!-- Cards Dettagli -->
+      <div class="details-grid">
+        <mat-card class="detail-card">
+          <div class="detail-icon-wrapper humidity">
+            <mat-icon>water_drop</mat-icon>
+          </div>
+          <div class="detail-info">
+            <p class="detail-label">Umidità</p>
+            <p class="detail-value">{{ weatherData.main.humidity }}%</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <div class="detail-icon-wrapper wind">
+            <mat-icon>air</mat-icon>
+          </div>
+          <div class="detail-info">
+            <p class="detail-label">Vento</p>
+            <p class="detail-value">{{ weatherData.wind.speed }} m/s</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <div class="detail-icon-wrapper pressure">
+            <mat-icon>compress</mat-icon>
+          </div>
+          <div class="detail-info">
+            <p class="detail-label">Pressione</p>
+            <p class="detail-value">{{ weatherData.main.pressure }} hPa</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <div class="detail-icon-wrapper visibility">
+            <mat-icon>visibility</mat-icon>
+          </div>
+          <div class="detail-info">
+            <p class="detail-label">Visibilità</p>
+            <p class="detail-value">{{ weatherData.visibility / 1000 | number:'1.0-1' }} km</p>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
